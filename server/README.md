@@ -28,6 +28,7 @@
     16. GET /api/users ei address e gele admin shob users k dekhte parbe.
     Middleware = isAdmin, getAllUser, searchByName+ pagination functionality
     17. responseHandler controller for error or success.
+    18. GET api/users/:id (get a single user by id)
 
 ## npm installing comand for server:
 
