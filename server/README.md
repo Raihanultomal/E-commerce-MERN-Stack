@@ -36,6 +36,8 @@
 
     20. DELETE api/users/:id -> delete a single user by id.
 
+    21. Refactoring and reusability and dynamic
+
 ## npm installing comand for server:
 
     npm init -y

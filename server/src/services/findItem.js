@@ -1,13 +1,13 @@
 const createError = require('http-errors');
-const User = require('../models/userModel');
+// const User = require('../models/userModel');
 const mongoose = require('mongoose'); // mongoose error handle korar jonne import kora hoyeche
 
-const findWithId = async (id, options = {}) => {
+const findWithId = async (Model, id, options = {}) => {
   try {
-    const item = await User.findById(id, options);
+    const item = await Model.findById(id, options);
 
     if (!item) {
-      throw createError(404, 'no item found');
+      throw createError(404, `${Model.modelName} dose not exist with this id`);
     } // error handle kora holo, jodi search kore kono user found na hoy se khetre ki hobe setar jonne
     return item;
   } catch (error) {
