@@ -3,7 +3,11 @@
 // ekhon app er jaygay userRouter use korlei hobe
 
 const express = require('express');
-const { getUsers, getUser } = require('../controllers/userController');
+const {
+  getUsers,
+  getUser,
+  deleteUser,
+} = require('../controllers/userController');
 const userRouter = express.Router();
 
 // nicher post request tar modde kichu logic use korechi
@@ -19,5 +23,6 @@ const userRouter = express.Router();
 
 userRouter.get('/', getUsers);
 userRouter.get('/:id', getUser);
+userRouter.delete('/:id', deleteUser);
 
 module.exports = userRouter;

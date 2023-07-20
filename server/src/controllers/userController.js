@@ -1,7 +1,8 @@
 const createError = require('http-errors');
+const fs = require('fs');
 const User = require('../models/userModel');
 const { successResponse } = require('./responseController');
-const mongoose = require('mongoose');
+const { findWithId } = require('../services/findItem');
 const getUsers = async (req, res, next) => {
   try {
     // kew search dile sei value ta nibe
@@ -42,16 +43,6 @@ const getUsers = async (req, res, next) => {
 
     const count = await User.find(filter).countDocuments();
     if (!users) throw createError(404, 'no users found'); // error handle kora holo, jodi search kore kono user found na hoy se khetre ki hobe setar jonne
-    // res.status(200).send({
-    //   message: 'Users Id showing bellow',
-    //   users,
-    //   pagination: {
-    //     totalPages: Math.ceil(count / limit),
-    //     currentPage: page,
-    //     previousPage: page - 1 > 0 ? page - 1 : null,
-    //     nextPage: page + 1 <= Math.ceil(count / limit) ? page + 1 : null,
-    //   },
-    // });
     return successResponse(res, {
       statusCode: 200,
       message: 'Users Id showing bellow',
@@ -76,11 +67,8 @@ const getUser = async (req, res, next) => {
   try {
     const id = req.params.id;
     const options = { password: 0 };
-    const user = await User.findById(id, options);
 
-    if (!user) {
-      throw createError(404, 'no user found');
-    } // error handle kora holo, jodi search kore kono user found na hoy se khetre ki hobe setar jonne
+    const user = await findWithId(id, options);
 
     return successResponse(res, {
       statusCode: 200,
@@ -88,12 +76,40 @@ const getUser = async (req, res, next) => {
       payload: { user },
     });
   } catch (error) {
-    if (error instanceof mongoose.Error) {
-      next(createError(400, 'Invalide User Id'));
-      return;
-    }
     next(error);
   }
 };
 
-module.exports = { getUsers, getUser };
+const deleteUser = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const options = { password: 0 };
+    const user = await findWithId(id, options);
+
+    const userImagePath = user.image;
+    fs.access(userImagePath, (err) => {
+      if (err) {
+        console.error('User image dose not exist');
+      } else {
+        fs.unlink(userImagePath, (err) => {
+          if (err) throw err;
+          console.log('User image was deleted');
+        });
+      }
+    });
+
+    await User.findByIdAndDelete({
+      _id: id,
+      isAdmin: false,
+    });
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: 'Single user deleted successfully ',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getUsers, getUser, deleteUser };

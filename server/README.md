@@ -27,7 +27,14 @@
 
     16. GET /api/users ei address e gele admin shob users k dekhte parbe.
     Middleware = isAdmin, getAllUser, searchByName+ pagination functionality
+
     17. responseHandler controller for error or success.
+    18. GET api/users/:id (get a single user by id)
+
+    19. How to create services in the backend
+    <!-- ekhane servicess bolte amra same request onek jaygay use kortesi. seta na kore amra ekta services folder e rakhte pari & proijon moto call korte pari -->
+
+    20. DELETE api/users/:id -> delete a single user by id
 
 ## npm installing comand for server:
 
